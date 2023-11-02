@@ -71,15 +71,10 @@ write_ok "NEW_URL correctly set"
 section "Checking if NEW_URL is empty"
 
 # Query to check if there are any tables in the new database
-query="SELECT count(*) FROM information_schema.tables WHERE table_schema NOT IN ('information_schema', 'pg_catalog');"
 output=$(echo 'DBSIZE' | redis-cli -u $NEW_URL 2>/dev/null)
 
-echo "Output: $output"
-
 if [[ "$output" == *"0"* ]]; then
-  if [ -z "$OVERWRITE_DATABASE" ]; then
-    write_ok "The new database is empty. Proceeding with restore."
-  fi
+  write_ok "The new database is empty. Proceeding with restore."
 else
   if [ -z "$OVERWRITE_DATABASE" ]; then
     error_exit "The new database is not empty. Aborting migration.\nSet the OVERWRITE_DATABASE environment variable to overwrite the new database."
