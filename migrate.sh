@@ -71,7 +71,7 @@ write_ok "NEW_URL correctly set"
 section "Checking if NEW_URL is empty"
 
 # Query to check if there are any tables in the new database
-output=$(echo 'DBSIZE' | redis-cli -u $NEW_URL 2>/dev/null)
+output=$(echo 'DBSIZE' | redis-cli -u $NEW_URL)
 
 if [[ "$output" == *"0"* ]]; then
   write_ok "The new database is empty. Proceeding with restore."
