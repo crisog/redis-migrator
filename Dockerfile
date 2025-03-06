@@ -1,13 +1,13 @@
 FROM ubuntu:jammy
 
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y redis build-essential python3 python3-pip
-
 ENV PYTHONUNBUFFERED=1
-RUN pip3 install rdbtools python-lzf
 
-WORKDIR app
+RUN apt-get update && apt-get upgrade -y \
+    && apt-get install -y redis build-essential python3 python3-pip \
+    && pip3 install rdbtools python-lzf
 
-ADD . .
+WORKDIR /app
+
+COPY --chmod=755 migrate.sh ./
 
 CMD bash migrate.sh
