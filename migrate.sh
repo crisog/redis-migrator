@@ -43,26 +43,26 @@ printf "${_RESET}\n"
 
 section "Validating environment variables"
 
-section "Checking if OLD_URL is set and not empty"
+section "Checking if SOURCE_REDIS_URL is set and not empty"
 
-# Validate that OLD_URL environment variable exists
-if [ -z "$OLD_URL" ]; then
-    error_exit "OLD_URL environment variable is not set."
+# Validate that SOURCE_REDIS_URL environment variable exists
+if [ -z "$SOURCE_REDIS_URL" ]; then
+    error_exit "SOURCE_REDIS_URL environment variable is not set."
 fi
 
-write_ok "OLD_URL correctly set"
+write_ok "SOURCE_REDIS_URL correctly set"
 
-section "Checking if NEW_URL is set and not empty"
+section "Checking if TARGET_REDIS_URL is set and not empty"
 
-# Validate that NEW_URL environment variable exists
-if [ -z "$NEW_URL" ]; then
-    error_exit "NEW_URL environment variable is not set."
+# Validate that TARGET_REDIS_URL environment variable exists
+if [ -z "$TARGET_REDIS_URL" ]; then
+    error_exit "TARGET_REDIS_URL environment variable is not set."
 fi
 
-write_ok "NEW_URL correctly set"
+write_ok "TARGET_REDIS_URL correctly set"
 
 # Query to check if there are any tables in the new database
-output=$(echo 'DBSIZE' | redis-cli -u $NEW_URL)
+output=$(echo 'DBSIZE' | redis-cli -u $TARGET_REDIS_URL)
 
 if [[ "$output" == *"0"* ]]; then
   write_ok "The new database is empty. Proceeding with restore."
@@ -73,11 +73,11 @@ else
   write_warn "The new database is not empty. Found OVERWRITE_DATABASE environment variable. Proceeding with restore."
 fi
 
-section "Dumping database from OLD_URL" 
+section "Dumping database from SOURCE_REDIS_URL"
 
 dump_file="/data/redis_dump.rdb"
 
-redis-cli -u $OLD_URL --rdb "$dump_file" || error_exit "Failed to dump database from $OLD_URL."
+redis-cli -u $SOURCE_REDIS_URL --rdb "$dump_file" || error_exit "Failed to dump database from $SOURCE_REDIS_URL."
 
 write_ok "Successfully saved dump to $dump_file"
 
@@ -91,12 +91,12 @@ rdb -c protocol $dump_file > $protocol_file
 
 write_ok "Converted rdb to protocol file"
 
-section "Restoring database to NEW_URL"
+section "Restoring database to TARGET_REDIS_URL"
 
 # Restore that data to the new database
-redis-cli -u $NEW_URL --pipe < $protocol_file
+redis-cli -u $TARGET_REDIS_URL --pipe < $protocol_file
 
-write_ok "Successfully restored database to NEW_URL"
+write_ok "Successfully restored database to TARGET_REDIS_URL"
 
 section "Cleaning up"
 

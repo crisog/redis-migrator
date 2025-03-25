@@ -1,4 +1,3 @@
-# Redis Plugin Migration
+# Redis Migrator
 
-Script and Docker image to automate migrating the Railway Redis plugin to a Database service.
-
+Script and Docker image to automate migrating Redis data from one database to another.
