@@ -1,0 +1,10 @@
+services:
+  redis-migrator:
+    build:
+      context: .
+    container_name: redis-migrator
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data
+    restart: "no"

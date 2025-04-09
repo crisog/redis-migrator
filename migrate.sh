@@ -87,7 +87,7 @@ write_ok "Dump file size: $dump_file_size"
 
 protocol_file="/data/redis_dump.protocol"
 
-rdb -c protocol $dump_file > $protocol_file
+rdb -c aof -o $protocol_file $dump_file
 
 write_ok "Converted rdb to protocol file"
 

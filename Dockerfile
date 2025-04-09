@@ -1,10 +1,10 @@
-FROM ubuntu:jammy
+FROM golang:1.23.8-bullseye
 
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y redis build-essential python3 python3-pip \
-    && pip3 install rdbtools python-lzf
+    && apt-get install -y redis \
+    && go install github.com/hdt3213/rdb@latest
 
 WORKDIR /app
 
